@@ -3,7 +3,7 @@ name: 自动部署新版本到服务器
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - "v*.*.*"
 jobs:
   publish-release:
     runs-on: ubuntu-latest
@@ -13,7 +13,7 @@ jobs:
       # 创建 env 文件
       # build docker image
       # start the app
-      - name: 'create env file'
+      - name: "create env file"
         run: |
           touch .env
           echo ALC_ACCESS_KEY=${{ secrets.ALC_ACCESS_KEY }} >> .env
@@ -26,7 +26,7 @@ jobs:
           echo MONGO_DB_USERNAME=${{ secrets.MONGO_DB_USERNAME }} >> .env
           echo MONGO_DB_PASSWORD=${{ secrets.MONGO_DB_PASSWORD }} >> .env
           echo REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }} >> .env
-      # 使用阿里云ACR 完成 docker login 
+      # 使用阿里云ACR 完成 docker login
       - name: Login to Aliyun Container Registry (ACR)
         uses: aliyun/acr-login@v1
         with:
@@ -39,31 +39,31 @@ jobs:
         run: docker build --tag "registry.cn-hangzhou.aliyuncs.com/vikingmute/lego:${{github.ref_name}}" .
       # 使用标记的 tag 进行 push
       - name: Push Image to ACR
-        run: docker push registry.cn-hangzhou.aliyuncs.com/vikingmute/lego:${{github.ref_name}} 
+        run: docker push registry.cn-hangzhou.aliyuncs.com/vikingmute/lego:${{github.ref_name}}
       # 查找 docker-compose-online 文件 并且完成版本替换
       - name: Find and Replace
         uses: jacobtomlinson/gha-find-replace@v2
-        with: 
+        with:
           find: "{{tag}}"
           replace: ${{github.ref_name}}
           include: "docker-compose-online.yml"
       - run: cat docker-compose-online.yml
       # 拷贝必须文件到一个文件夹，包括 .env, docker-compose-online.yml, mongo-entrypoint
-      - name: 'copy necessary files in to one folder'
+      - name: "copy necessary files in to one folder"
         run: |
           mkdir lego-backend 
           cp .env docker-compose-online.yml lego-backend
           cp -r mongo-entrypoint lego-backend
           ls -a lego-backend
       # 通过 scp 拷贝必须文件到服务器
-      - name: 'copy lego-backend folder via scp'
+      - name: "copy lego-backend folder via scp"
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PWD }}
-          source: 'lego-backend'
-          target: '~'
+          source: "lego-backend"
+          target: "~"
       # 通过 SSH 登录然后重启服务
       - name: executing ssh and restart docker
         uses: appleboy/ssh-action@master
@@ -74,7 +74,7 @@ jobs:
           script_stop: true
           # * 登录阿里云 ACR
           # 停止服务 docker-compose down
-          # 启动服务 docker-compose up 
+          # 启动服务 docker-compose up
           # 清理工作
           script: |
             docker login --username=${{secrets.ACR_USERNAME}} --password=${{secrets.ACR_PASSWORD}} registry.cn-hangzhou.aliyuncs.com
@@ -82,8 +82,4 @@ jobs:
             docker-compose -f docker-compose-online.yml down
             docker-compose -f docker-compose-online.yml up -d
             rm -rf .env
-            docker logout registry.cn-hangzhou.aliyuncs.com 
-
-
-
-
+            docker logout registry.cn-hangzhou.aliyuncs.com
