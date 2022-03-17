@@ -16,7 +16,7 @@ module.exports = env => {
     output: {
       path: buildFileDest,
       filename: 'bundle.[hash].js',
-      publicPath: env.production ? 'http://lego-backend.oss-cn-shanghai.aliyuncs.com/h5-assets/' : '/public/'
+      publicPath: env.production ? 'http://imooc-cli-ljk.oss-cn-beijing.aliyuncs.com/h5-assets/' : '/public/'
     },
     module: {
       rules: [

@@ -63,8 +63,8 @@ export default (appInfo: EggAppInfo) => {
     client: {
       accessKeyId: process.env.ALC_ACCESS_KEY || '',
       accessKeySecret: process.env.ALC_SECRET_KEY || '',
-      bucket: 'lego-backend',
-      endpoint: 'oss-cn-shanghai.aliyuncs.com'
+      bucket: 'imooc-cli-ljk',
+      endpoint: 'oss-cn-beijing.aliyuncs.com'
     }
   }
   const aliCloudConfig = {
