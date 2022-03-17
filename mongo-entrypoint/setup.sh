@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # shell脚本中发生错误，即命令返回值不等于0，则停止执行并退出shell
+# mogondb 必须是初次部署
 set -e
 
 mongo <<EOF
@@ -31,4 +32,3 @@ db.works.insertMany([
   }
 ])
 EOF
-

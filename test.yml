@@ -12,6 +12,7 @@ services:
       - 27017:27017
     env_file:
       - .env
+    restart: always
   lego-redis:
     image: redis:latest
     container_name: lego-redis
@@ -24,6 +25,7 @@ services:
       - 6379:6379
     env_file:
       - .env
+    restart: always
   lego-backend:
     image: registry.cn-chengdu.aliyuncs.com/jaquelee/h5brick:0.0.2
     container_name: lego-backend
@@ -31,3 +33,4 @@ services:
       - 7002:7001
     env_file:
       - .env
+    restart: always
