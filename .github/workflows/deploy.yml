@@ -7,7 +7,7 @@ jobs:
       # checkout 代码
       - uses: actions/checkout@v2
       # 创建 env 文件
-      - name: 'create env file'
+      - name: "create env file"
         run: |
           touch .env
           echo ALC_ACCESS_KEY=${{ secrets.ALC_ACCESS_KEY }} >> .env
@@ -21,40 +21,37 @@ jobs:
           echo MONGO_DB_PASSWORD=${{ secrets.MONGO_DB_PASSWORD }} >> .env
           echo REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }} >> .env
           echo PING_ENV=${{ secrets.PING_ENV }} >> .env
-      # 拷贝必须文件到一个文件夹，包括 .env, docker-compose-online.yml, mongo-entrypoint
-      - name: 'copy necessary files in to one folder'
+      # 拷贝必须文件到一个文件夹，包括 .env, test.yml, mongo-entrypoint
+      - name: "copy necessary files in to one folder"
         run: |
           mkdir lego-backend
-          cp .env docker-compose-online.yml lego-backend
+          cp .env test.yml lego-backend
           cp -r mongo-entrypoint lego-backend
           ls -a lego-backend
       # 通过 scp 拷贝必须文件到服务器
-      - name: 'copy lego-backend folder via scp'
+      - name: "copy lego-backend folder via scp"
         uses: appleboy/scp-action@master
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.SSH_USER }}
-          password: ${{ secrets.SSH_PWD }}
-          source: 'lego-backend'
-          target: '~'
+          host: ${{ secrets.ALI_HOST }}
+          username: ${{ secrets.USER_NAME }}
+          password: ${{ secrets.PASS_WORD }}
+          source: "lego-backend"
+          target: "~"
       # 通过 SSH 登录然后重启服务
       - name: executing ssh and restart docker
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.SSH_USER }}
-          password: ${{ secrets.SSH_PWD }}
+          host: ${{ secrets.ALI_HOST }}
+          username: ${{ secrets.USER_NAME }}
+          password: ${{ secrets.PASS_WORD }}
           script_stop: true
           # * 登录阿里云 ACR
           # 停止服务 docker-compose down
-          # 启动服务 docker-compose up 
+          # 启动服务 docker-compose up
           # 清理工作
           script: |
-            docker login --username=${{secrets.ACR_USERNAME}} --password=${{secrets.ACR_PASSWORD}} registry.cn-hangzhou.aliyuncs.com
+            docker login --username=${{secrets.ACR_USERNAME}} --password=${{secrets.ACR_PASSWORD}} registry.cn-chengdu.aliyuncs.com
             cd ~/lego-backend/
-            docker-compose -f docker-compose-online.yml down
-            docker-compose -f docker-compose-online.yml up -d
-            rm -rf .env
-            docker logout registry.cn-hangzhou.aliyuncs.com
-
-
+            docker-compose -f test.yml down
+            docker-compose -f test.yml up -d
+            docker logout registry.cn-chengdu.aliyuncs.com

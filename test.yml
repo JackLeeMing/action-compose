@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   lego-mongo:
     image: mongo:latest
@@ -7,7 +7,7 @@ services:
       - /data/mongo/db:/data/db
       - /etc/localtime:/etc/localtime
       - /etc/timezone:/etc/timezone
-      - '$PWD/mongo-entrypoint/:/docker-entrypoint-initdb.d/'
+      - "$PWD/mongo-entrypoint/:/docker-entrypoint-initdb.d/"
     ports:
       - 27018:27017
     env_file:
@@ -25,9 +25,9 @@ services:
     env_file:
       - .env
   lego-backend:
-    image: registry.cn-chengdu.aliyuncs.com/jaquelee/h5brick:{{tag}}
+    image: registry.cn-chengdu.aliyuncs.com/jaquelee/h5brick:0.0.2
     container_name: lego-backend
     ports:
-     - 7002:7001
+      - 7002:7001
     env_file:
       - .env
