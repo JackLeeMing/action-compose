@@ -30,16 +30,16 @@ jobs:
       - name: Login to Aliyun Container Registry (ACR)
         uses: aliyun/acr-login@v1
         with:
-          login-server: https://registry.cn-hangzhou.aliyuncs.com
-          region-id: cn-hangzhou
+          login-server: https://registry.cn-chengdu.aliyuncs.com
+          region-id: cn-chengdu
           username: "${{ secrets.ACR_USERNAME }}"
           password: "${{ secrets.ACR_PASSWORD }}"
       # 使用正确的github tag 对应ACR tag 进行 docker build
       - name: Build image for ACR docker
-        run: docker build --tag "registry.cn-hangzhou.aliyuncs.com/vikingmute/lego:${{github.ref_name}}" .
+        run: docker build --tag "registry.cn-chengdu.aliyuncs.com/jaquelee/h5brick:${{github.ref_name}}" .
       # 使用标记的 tag 进行 push
       - name: Push Image to ACR
-        run: docker push registry.cn-hangzhou.aliyuncs.com/vikingmute/lego:${{github.ref_name}}
+        run: docker push registry.cn-chengdu.aliyuncs.com/jaquelee/h5brick:${{github.ref_name}}
       # 查找 docker-compose-online 文件 并且完成版本替换
       - name: Find and Replace
         uses: jacobtomlinson/gha-find-replace@v2
@@ -59,9 +59,9 @@ jobs:
       - name: "copy lego-backend folder via scp"
         uses: appleboy/scp-action@master
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.SSH_USER }}
-          password: ${{ secrets.SSH_PWD }}
+          host: ${{ secrets.ALI_HOST }}
+          username: ${{ secrets.USER_NAME }}
+          password: ${{ secrets.PASS_WORD }}
           source: "lego-backend"
           target: "~"
       # 通过 SSH 登录然后重启服务
@@ -77,9 +77,9 @@ jobs:
           # 启动服务 docker-compose up
           # 清理工作
           script: |
-            docker login --username=${{secrets.ACR_USERNAME}} --password=${{secrets.ACR_PASSWORD}} registry.cn-hangzhou.aliyuncs.com
+            docker login --username=${{secrets.ACR_USERNAME}} --password=${{secrets.ACR_PASSWORD}} registry.cn-chengdu.aliyuncs.com
             cd ~/lego-backend/
             docker-compose -f docker-compose-online.yml down
             docker-compose -f docker-compose-online.yml up -d
             rm -rf .env
-            docker logout registry.cn-hangzhou.aliyuncs.com
+            docker logout registry.cn-chengdu.aliyuncs.com

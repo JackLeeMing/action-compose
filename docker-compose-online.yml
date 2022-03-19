@@ -9,7 +9,7 @@ services:
       - /etc/timezone:/etc/timezone
       - '$PWD/mongo-entrypoint/:/docker-entrypoint-initdb.d/'
     ports:
-      - 27018:27017
+      - 27017:27017
     env_file:
       - .env
   lego-redis:
