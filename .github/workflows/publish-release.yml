@@ -68,9 +68,9 @@ jobs:
       - name: executing ssh and restart docker
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.SSH_USER }}
-          password: ${{ secrets.SSH_PWD }}
+          host: ${{ secrets.ALI_HOST }}
+          username: ${{ secrets.USER_NAME }}
+          password: ${{ secrets.PASS_WORD }}
           script_stop: true
           # * 登录阿里云 ACR
           # 停止服务 docker-compose down
