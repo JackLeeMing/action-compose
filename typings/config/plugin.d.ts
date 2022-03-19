@@ -22,6 +22,7 @@ import 'egg-jwt';
 import 'egg-redis';
 import 'egg-cors';
 import 'egg-oss';
+import 'egg-router-plus';
 import { EggPluginItem } from 'egg';
 declare module 'egg' {
   interface EggPlugin {
@@ -45,5 +46,6 @@ declare module 'egg' {
     redis?: EggPluginItem;
     cors?: EggPluginItem;
     oss?: EggPluginItem;
+    routerPlus?: EggPluginItem;
   }
 }

@@ -2,7 +2,6 @@
 // Do not modify this file!!!!!!!!!
 
 import 'egg';
-import ExportUser from '../../../app/model/_user';
 import ExportUser from '../../../app/model/user';
 import ExportWork from '../../../app/model/work';
 

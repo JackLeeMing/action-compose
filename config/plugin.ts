@@ -32,6 +32,10 @@ const plugin: EggPlugin = {
   oss: {
     enable: true,
     package: 'egg-oss'
+  },
+  routerPlus: {
+    enable: true,
+    package: 'egg-router-plus',
   }
 };
 
